@@ -19,7 +19,18 @@ impl State {
 
     fn main_menu(&mut self, ctx: &mut BTerm) {
         self.mode = GameModes::Menu;
-        ctx.print(1, 1, "Main Menu");
+        ctx.cls();
+        ctx.print_centered(5, "Welcome to flappy ascii");
+        ctx.print_centered(8, "(P) Play Game");
+        ctx.print_centered(9, "(Q) Quit Game");
+
+        if let Some(key) = ctx.key {
+            match key {
+                VirtualKeyCode::P => self.play(ctx),
+                VirtualKeyCode::Q => ctx.quitting = true,
+                _ => {}
+            }
+        }
     }
 
     fn dead(&mut self, ctx: &mut BTerm) {
