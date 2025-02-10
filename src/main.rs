@@ -66,14 +66,14 @@ struct Player {
 impl Player {
     fn new(x: i32, y: i32) -> Self {
         Player {
-            x: x,
-            y: y,
+            x,
+            y,
             velocity: 0.0,
         }
     }
 
     fn render(&mut self, ctx: &mut BTerm) {
-        ctx.set(self.x, self.y, RED, BLACK, to_cp437("@"));
+        ctx.set(self.x, self.y, RED, BLACK, to_cp437('@'));
     }
 }
 
