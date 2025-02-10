@@ -1,13 +1,16 @@
 use bracket_lib::prelude::*;
 
-#[derive(Debug)]
 struct State {
+    player: Player,
+    frame_time: f32,
     mode: GameModes,
 }
 
 impl State {
     fn new() -> Self {
         Self {
+            player: Player::new(5, 25),
+            frame_time: 0.0,
             mode: GameModes::Menu,
         }
     }
@@ -50,7 +53,6 @@ impl GameState for State {
     }
 }
 
-#[derive(Debug)]
 enum GameModes {
     Playing,
     Menu,
