@@ -115,13 +115,11 @@ impl Player {
     }
 
     fn flap(&mut self) {
-        println!("Flappy flap flap...🐥");
         self.velocity = -2.0;
     }
 }
 
 fn main() -> BError {
-    println!("Hello, world! ");
     let context = BTermBuilder::simple80x50()
         .with_title("Flappy ascii 😛")
         .build()?;
