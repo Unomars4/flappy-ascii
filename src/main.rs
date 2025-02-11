@@ -11,6 +11,7 @@ struct State {
     frame_time: f32,
     mode: GameModes,
     obstacle: Obstacle,
+    score: i32,
 }
 
 impl State {
@@ -20,6 +21,7 @@ impl State {
             frame_time: 0.0,
             mode: GameModes::Menu,
             obstacle: Obstacle::new(SCREEN_WIDTH / 2, 0),
+            score: 0,
         }
     }
 
@@ -32,6 +34,8 @@ impl State {
     fn play(&mut self, ctx: &mut BTerm) {
         self.mode = GameModes::Playing;
         ctx.cls_bg(NAVAJOWHITE2);
+        ctx.print(0, 1, "Score:");
+        ctx.print(6, 1, self.score.to_string());
         self.frame_time += ctx.frame_time_ms;
 
         if self.frame_time > FRAME_DURATION {
