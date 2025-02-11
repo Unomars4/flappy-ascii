@@ -1,4 +1,4 @@
-use std::i32;
+use std::{fmt::format, i32};
 
 use bracket_lib::prelude::*;
 
@@ -34,8 +34,8 @@ impl State {
     fn play(&mut self, ctx: &mut BTerm) {
         self.mode = GameModes::Playing;
         ctx.cls_bg(NAVAJOWHITE2);
-        ctx.print(0, 1, "Score:");
-        ctx.print(6, 1, self.score.to_string());
+        ctx.print_centered(0, "Press Space to flap.");
+        ctx.print(0, 1, &format!("Score: {}", self.score));
         self.frame_time += ctx.frame_time_ms;
 
         if self.frame_time > FRAME_DURATION {
@@ -46,17 +46,16 @@ impl State {
             self.player.flap();
         }
 
-        if self.obstacle.hit_obstacle(&self.player) {
-            println!("You hit the obstacle 😭");
-            self.dead(ctx);
-        }
-
         self.obstacle.render(ctx, self.player.x);
         self.player.render(ctx);
-        ctx.print_centered(0, "Press Space to flap.");
 
-        if self.player.x > SCREEN_WIDTH {
-            self.mode = GameModes::End;
+        if self.player.x > self.obstacle.x {
+            self.score += 1;
+            self.obstacle = Obstacle::new(self.player.x + SCREEN_WIDTH, self.score);
+        }
+
+        if self.player.y > SCREEN_HEIGHT || self.obstacle.hit_obstacle(&self.player) {
+            self.dead(ctx);
         }
     }
 
