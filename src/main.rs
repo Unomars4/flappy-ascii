@@ -19,7 +19,7 @@ impl State {
             player: Player::new(5, 25),
             frame_time: 0.0,
             mode: GameModes::Menu,
-            obstacle: Obstacle::new(SCREEN_WIDTH / 2, 1000),
+            obstacle: Obstacle::new(SCREEN_WIDTH / 2, 0),
         }
     }
 
@@ -41,9 +41,16 @@ impl State {
         if let Some(VirtualKeyCode::Space) = ctx.key {
             self.player.flap();
         }
+
+        if self.obstacle.hit_obstacle(&self.player) {
+            println!("You hit the obstacle 😭");
+            self.dead(ctx);
+        }
+
         self.obstacle.render(ctx, self.player.x);
         self.player.render(ctx);
         ctx.print_centered(0, "Press Space to flap.");
+
         if self.player.x > SCREEN_WIDTH {
             self.mode = GameModes::End;
         }
@@ -152,6 +159,14 @@ impl Obstacle {
         for y in self.gap_y + half_size..SCREEN_HEIGHT {
             ctx.set(screen_x, y, GRAY0, GRAY1, to_cp437('|'));
         }
+    }
+
+    fn hit_obstacle(&mut self, player: &Player) -> bool {
+        let half_size = self.size / 2;
+        let does_x_match = player.x == self.x;
+        let player_above_gap = player.y < self.gap_y - half_size;
+        let player_below_gap = player.y > self.gap_y + half_size;
+        does_x_match && (player_below_gap || player_above_gap)
     }
 }
 
