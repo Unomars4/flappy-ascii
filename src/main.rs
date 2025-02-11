@@ -28,6 +28,8 @@ impl State {
     fn restart(&mut self) {
         self.player = Player::new(5, 25);
         self.frame_time = 0.0;
+        self.score = 0;
+        self.obstacle = Obstacle::new(SCREEN_WIDTH, self.score);
         self.mode = GameModes::Playing;
     }
 
@@ -78,6 +80,16 @@ impl State {
     fn dead(&mut self, ctx: &mut BTerm) {
         self.mode = GameModes::End;
         ctx.print(1, 1, "Game Over");
+        ctx.print(1, 2, &format!("Score: {}", self.score));
+        ctx.print_centered(8, "(R) Restart Game");
+        ctx.print_centered(9, "(Q) Quit Game");
+        if let Some(key) = ctx.key {
+            match key {
+                VirtualKeyCode::R => self.restart(),
+                VirtualKeyCode::Q => ctx.quitting = true,
+                _ => {}
+            }
+        }
     }
 }
 
